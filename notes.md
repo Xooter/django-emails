@@ -1,3 +1,0 @@
-- [ ] favs
-- [ ] tags
-- [ ] cache

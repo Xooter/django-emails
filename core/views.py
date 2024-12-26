@@ -127,7 +127,6 @@ def send_mails(request, list_id):
                 cuerpo=body
             )
 
-            # Agregar mensaje de éxito
             messages.success(request, "Los correos se han enviado correctamente.")
 
             return redirect('view_list', list_id=lista.id)
