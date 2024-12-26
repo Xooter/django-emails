@@ -16,4 +16,46 @@
         {% endfor %}
     </tbody>
 </table>
+
+<form id="send-mails-form" method="POST" action="{% url 'send_mails' lista.id %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="subject">Asunto</label>
+        <input type="text" id="subject" name="subject" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="body">Cuerpo del correo</label>
+        <textarea id="body" name="body" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar Correos</button>
+</form>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="successModalLabel">Exito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Los correos se han enviado correctamente.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  <script>
+    {% for message in messages %}
+      {% if message.level_tag == "success" %}
+        var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+        myModal.show();
+      {% endif %}
+    {% endfor %}
+  </script>
+{% endif %}
+
 {% endblock %}

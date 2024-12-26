@@ -1,15 +1,14 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Lista, Contacto
-from django.core.mail import send_mass_mail
-from .forms import ListaForm, ContactoForm
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from .forms import ListaForm, ContactoForm,EmailForm
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.http import JsonResponse
 
 def registro(request):
     if request.method == 'POST':
@@ -99,3 +98,24 @@ def view_list(request, list_id):
     lista = get_object_or_404(Lista, id=list_id, usuario=request.user)
     contactos = lista.contactos.all()
     return render(request, 'view_list.html', {'lista': lista, 'contactos': contactos})
+
+
+@login_required
+def send_mails(request, list_id):
+    lista = get_object_or_404(Lista, id=list_id)
+    contactos = lista.contactos.all()
+
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            body = form.cleaned_data['body']
+            emails = [contacto.email for contacto in contactos]
+
+            send_mail(subject, body, 'joaquinrighetti@gmail.com', emails)
+
+            messages.success(request, '¡Correos enviados correctamente!')
+
+            return redirect('view_list', list_id=list_id)
+
+    return redirect('view_list', list_id=list_id)
