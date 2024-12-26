@@ -17,3 +17,11 @@ class Contacto(models.Model):
     def __str__(self):
         return self.email
 
+class EnvioCorreo(models.Model):
+    lista = models.ForeignKey(Lista, on_delete=models.CASCADE, related_name='envios')
+    asunto = models.CharField(max_length=255)
+    cuerpo = models.TextField()
+    fecha_envio = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Enviado a {self.lista.nombre} el {self.fecha_envio}"

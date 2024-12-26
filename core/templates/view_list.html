@@ -21,11 +21,11 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="subject">Asunto</label>
-        <input type="text" id="subject" name="subject" class="form-control" required>
+				<input type="text" id="subject" value={{ultimo_envio.asunto}} name="subject" class="form-control" required>
     </div>
     <div class="form-group">
         <label for="body">Cuerpo del correo</label>
-        <textarea id="body" name="body" class="form-control" required></textarea>
+        <textarea id="body" name="body" class="form-control" required>{{ultimo_envio.cuerpo}}</textarea>
     </div>
     <button type="submit" class="btn btn-primary">Enviar Correos</button>
 </form>

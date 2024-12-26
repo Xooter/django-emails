@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Lista, Contacto
+from .models import Lista, Contacto ,EnvioCorreo
 from django.core.mail import send_mail
 from .forms import ListaForm, ContactoForm,EmailForm
 from django.core.exceptions import ValidationError
@@ -95,9 +95,16 @@ def delete_list(request, list_id):
 
 @login_required
 def view_list(request, list_id):
-    lista = get_object_or_404(Lista, id=list_id, usuario=request.user)
+    lista = get_object_or_404(Lista, id=list_id)
     contactos = lista.contactos.all()
-    return render(request, 'view_list.html', {'lista': lista, 'contactos': contactos})
+
+    ultimo_envio = lista.envios.last()
+
+    return render(request, 'view_list.html', {
+        'lista': lista,
+        'contactos': contactos,
+        'ultimo_envio': ultimo_envio
+    })
 
 
 @login_required
@@ -114,8 +121,22 @@ def send_mails(request, list_id):
 
             send_mail(subject, body, 'joaquinrighetti@gmail.com', emails)
 
-            messages.success(request, '¡Correos enviados correctamente!')
+            EnvioCorreo.objects.create(
+                lista=lista,
+                asunto=subject,
+                cuerpo=body
+            )
 
-            return redirect('view_list', list_id=list_id)
+            # Agregar mensaje de éxito
+            messages.success(request, "Los correos se han enviado correctamente.")
 
-    return redirect('view_list', list_id=list_id)
+            return redirect('view_list', list_id=lista.id)
+
+    else:
+        form = EmailForm()
+
+    return render(request, 'view_list.html', {
+        'form': form, 
+        'lista': lista, 
+        'contactos': contactos
+    })
