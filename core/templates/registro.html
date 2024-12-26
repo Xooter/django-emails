@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 text-center">Registrarse</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>¡Oops</strong> {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+
+<!-- Codigo sacado de: -->
+<!-- https://stackoverflow.com/questions/49346582/how-do-i-style-my-user-registration-form-using-bootstrap-in-django -->
+
+                        <div class="form-group mb-3">
+                            <label for="{{ form.username.id_for_label }}">
+															Usuario
+                            </label>
+                            <input type="text" id="{{ form.username.id_for_label }}"
+                                   name="{{ form.username.html_name }}"
+                                   {% if form.username.field.required %}required{% endif %}
+                                   class="form-control{% if form.username.errors %} is-invalid {% endif %}"
+                                   value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
+                            {% for err in form.username.errors %}
+                                <span class="invalid-feedback">{{ err }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="{{ form.email.id_for_label }}">
+															Mail
+                            </label>
+                            <input type="email" id="{{ form.email.id_for_label }}"
+                                   name="{{ form.email.html_name }}"
+                                   {% if form.email.field.required %}required{% endif %}
+                                   class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                                   value="{% if form.email.value %}{{ form.email.value }}{% endif %}">
+                            {% for err in form.email.errors %}
+                                <span class="invalid-feedback">{{ err }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="{{ form.password.id_for_label }}">
+															Password
+                            </label>
+                            <input type="password" id="{{ form.password.id_for_label }}"
+                                   name="{{ form.password.html_name }}"
+                                   {% if form.password.field.required %}required{% endif %}
+                                   class="form-control{% if form.password.errors %} is-invalid {% endif %}">
+                            {% if form.password.help_text %}
+                                <small class="text-muted">
+                                    {{ form.password.help_text }}
+                                </small>
+                            {% endif %}
+                            {% for err in form.password.errors %}
+                                <span class="invalid-feedback">{{ err }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="{{ form.password2.id_for_label }}">
+															Confirmacion de Password
+                            </label>
+                            <input type="password" id="{{ form.password2.id_for_label }}"
+                                   name="{{ form.password2.html_name }}"
+                                   {% if form.password2.field.required %}required{% endif %}
+                                   class="form-control{% if form.password2.errors %} is-invalid {% endif %}">
+                            {% for err in form.password2.errors %}
+                                <span class="invalid-feedback">{{ err }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-block w-100 py-2">Registrarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

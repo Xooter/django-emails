@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Ver Lista{% endblock %}
+{% block content %}
+<h1 class="mb-4">{{ lista.nombre }}</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contacto in contactos %}
+        <tr>
+            <td>{{ contacto.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

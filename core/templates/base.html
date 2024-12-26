@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Mi Proyecto{% endblock %}</title>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+	<body>
+    <div class="container-fluid">
+    	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm justify-content-between align-items-center">
+        <a class="navbar-brand fs-4 fw-bold text-primary" href="{% url 'dashboard' %}">Emails Challenge</a>
+        <div class="ms-auto " id="navbarNav">
+            <ul class="navbar-nav d-flex">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'quit' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm fw-semibold px-4">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-item mr-4">
+                        <a href="{% url 'registro' %}" class="btn btn-outline-primary btn-sm me-2 fw-semibold">Registro</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}" class="btn btn-success btn-sm fw-semibold px-4">Iniciar Sesión</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    	</nav>
+		</div>
+		<div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+	</body>
+</html>

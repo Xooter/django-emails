@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Crear Lista
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Crear Lista</h1>
+
+<form method="post" id="emailsForm">
+  {% csrf_token %}
+  
+  <div class="form-group">
+    <label for="nombre_lista">Nombre de la lista</label>
+    <input type="text" class="form-control" id="nombre_lista" name="nombre_lista" placeholder="Ingresa el nombre de la lista">
+  </div>
+
+  <div class="form-group">
+    <label for="emailInput">Correo electrónico</label>
+    <input type="text" class="form-control" id="emailInput" name="email" placeholder="Ejemplo: correo1@mail.com">
+    <button type="button" class="btn btn-primary mt-2" id="addEmailButton">Agregar correo</button>
+  </div>
+
+  <table class="table table-striped mt-3" id="emailsTable">
+    <thead>
+      <tr>
+        <th>Correo Electrónico</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+  <input type="hidden" id="emailsHidden" name="emails_hidden">
+
+  <button type="submit" class="btn btn-success mt-3">Guardar Lista</button>
+</form>
+
+{% if error_message %}
+  <div class="alert alert-danger mt-3">
+    {{ error_message }}
+  </div>
+{% endif %}
+
+{% if success_message %}
+  <div class="alert alert-success mt-3">
+    {{ success_message }}
+  </div>
+{% endif %}
+
+<script>
+  function validateEmail(email) {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  }
+
+  document.getElementById('addEmailButton').addEventListener('click', function() {
+    const emailInput = document.getElementById('emailInput');
+    const email = emailInput.value.trim();
+    
+    if (email && validateEmail(email)) {
+      const table = document.getElementById('emailsTable').getElementsByTagName('tbody')[0];
+      const newRow = table.insertRow();
+      
+      const cell1 = newRow.insertCell(0);
+      cell1.textContent = email;
+      
+      const cell2 = newRow.insertCell(1);
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Eliminar';
+      deleteButton.classList.add('btn', 'btn-danger');
+      deleteButton.onclick = function() {
+        newRow.remove();
+        updateHiddenField();  
+      };
+      cell2.appendChild(deleteButton);
+      
+      emailInput.value = '';
+      
+      updateHiddenField();
+    } else {
+      alert('Por favor ingresa un correo electrónico válido.');
+    }
+  });
+
+  function updateHiddenField() {
+    const emails = [];
+    const rows = document.getElementById('emailsTable').getElementsByTagName('tbody')[0].rows;
+
+    for (let i = 0; i < rows.length; i++) {
+      emails.push(rows[i].cells[0].textContent);
+    }
+
+    document.getElementById('emailsHidden').value = emails.join(',');    }
+
+	function validateForm() {
+    const nombreLista = document.getElementById('nombre_lista').value.trim();
+    const emailsHidden = document.getElementById('emailsHidden').value.trim();
+
+    if (!nombreLista) {
+      alert('Ingresa un nombre para la lista');
+      return false;
+    }
+
+    if (!emailsHidden) {
+      alert('Agrega al menos un correo electrónico a la lista');
+      return false;
+    }
+
+    return true;
+  }
+</script>
+{% endblock %}

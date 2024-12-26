@@ -1,0 +1,9 @@
+<h2>¿Estás seguro de que deseas eliminar la lista "{{ lista.nombre }}"?</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Eliminar</button>
+  <a href="{% url 'view_list' list_id=lista.id %}" class="btn btn-secondary"
+    >Cancelar</a
+  >
+</form>
